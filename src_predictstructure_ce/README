@@ -1,0 +1,56 @@
+##########################################################
+# predictstructure_ce
+# written by Eunseok Lee
+# v1: Feb 2, 2018
+##########################################################
+
+This program is a part of the spin-atom CE package for the layered LNC system.
+This program construct the correlation matrix from the configuration of atomic species and magnetic moment.
+To compile this program, type the following at the prompt.
+
+>> make
+
+It will build an executable, run_findcluster_ce.
+
+To run the executable, the parameters in the following list should be provided.
+
+1) howmanyCo: the number of Co atoms, to 
+2) newstart: 1-new start (random initial configurations), 0-restart (load existing initial configurations)
+3) max_iter: the maximum number of iteration
+4) kT: the thermal energy in Boltzmann factor
+5) dispfreq: the frequency of displaying and storing the result
+6) np: the number of cationic lattice sites
+7) neighbor_num: the number of neighbors of each atom
+8) howmanyclustercol: the number of cluster functions (selected from find cluster)
+9) ncluster1: the number of point cluster types
+10) ncluster2: the number of pair cluster types
+11) ncluster3: the number of three-body cluster types
+12) data_ini_filename: the file name of initial configuration of atomic species
+13) magmom_ini_filename: the file name of initial configuration of spin species
+
+These parameters should be written in param.dat.
+
+In addition to param.dat, the following files also should be provided.
+1) cluster_set_min.dat: the selected cluster functions
+2) x.dat: the corresponding effective cluster interactions
+3) nlist.dat: neighbor list
+4) map_to_cluster1.dat: mapping info, from a lattice site to point cluster type
+5) map_to_cluster2.dat: mapping info, from a pair of lattice sites to pair cluster type
+6) map_to_cluster3.dat: mapping info, from a set of three lattice sites to three-body cluster type
+7) *.dat, for atomic species: initial configuration of atomic species at each lattice site
+8) *.dat, for spin types: initial configuration of spin types at each lattice site
+
+The files 1) and 2) can be provided from the results of running findcluster (another program of the package), and the files 3)-6) can be provided from running clusterlist (another program of the package). The files 7) and 8) must be provided if newstart is set to 0 and their names should be specified in param.dat
+
+You can run the executable as follows.
+
+>>./run_findcluster_ce
+
+The results will be stored in dir_result, which will be created or updated during the running, as listed in the following list.
+
+1) data_trial_min.dat: the atomic species at each lattice site of the optimal structure
+2) magmom_trial_min.dat: the spin type at each lattice site of the optimal structure
+3) on_the_fly_datamag_****.dat: the coupled configuration of atomic species (column 1) and spin type (column 2) at each lattice site of the intermediate structures
+4) corr_mat_trial0.dat: the correlation matrix from the initial configurations
+
+

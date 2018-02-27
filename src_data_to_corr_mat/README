@@ -1,0 +1,58 @@
+##########################################################
+# data_to_corr_mat
+# written by Eunseok Lee
+# v1: Feb 2, 2018
+##########################################################
+
+This program is a part of the spin-atom CE package for the layered LNC system.
+This program constructs the CE correlation matrix from the coupled configurations of atomic species and magnetic moment.
+To compile this program, 'make' at the prompt.
+
+>> make
+
+It will build an executable, run_data_to_corr_mat.
+
+To run the executable, the parameters in the following list should be provided.
+
+1) np: the number of cationic lattice sites (anion lattice sites are not considered for CE)
+2) neighbor_num: the number of neighbors of each atom
+3) ncluster1: the number of cluster 1 types
+4) ncluster2: the number of cluster 2 types
+5) ncluster3: the number of cluster 3 types
+6) ndata: the number of data
+7) near_convh_cutoff: the critical energy to filter out the data with extremely high Ef
+
+These parameters should be written in param.dat.
+
+In addition to param.dat, the following files also should be provided.
+1) data_orig.dat: atomic species at each lattice site - size of ndata x np 
+2) magmom_orig.dat: spin species at each lattice site - size of ndata x np
+3) E_orig.dat: the electronic energy of each data set - size of ndata
+4) Ef_orig.dat: the formation energy of each data set - size of ndata
+5) map_to_cluster1.dat: mapping info, from a lattice site to point cluster type
+6) map_to_cluster2.dat: mapping info, from a pair of lattice sites to pair cluster type
+7) map_to_cluster3.dat: mapping info, from a set of three lattice sites to three-body cluster type
+8) nlist.dat: neighbor list
+
+The files 1)-4) should be provided by analyzing the data sets in the training set, while the files 5)-8) are provided from the result of running clusterlist (another program of the package).
+
+You can run the executable as follows.
+
+>>./run_data_to_corr_mat
+
+The results will be stored in dir_result, which will be created or updated during the running, as listed in the following list.
+
+1) result_param.dat
+	1a) n_corr_mat_ug_row: the number of data set after post processing
+	1b) n_non_singular_col: the number of non-singular cluster functions 
+2) corr_mat_ugs.dat: the correlation matrix after post processing
+3) Ef_ug.dat: the formation energy after post processing
+4) usefulcorr_col.dat: the list of non-singular cluster functions
+5) ef_conv_hull.dat: the convex hull of the formation energy (w.r.t. LiNiO2 and LiCoO2)
+6) tmp_Ef_u.dat: an intermediate file produced during post processing
+7) tmp_corr_mat.dat: an intermediate file produced during post processing
+8) tmp_nC_u.dat: an intermediate file produced during post processing
+9) tmp_near_convh.dat: an intermediate file produced during post processing
+10) tmp_nondegenerate.dat: an intermediate file produced during post processing
+
+The parameters in result_param.dat and files 2)-4) will be used for findcluster and predictstructure_ce

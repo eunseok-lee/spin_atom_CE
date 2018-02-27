@@ -1,0 +1,16 @@
+# control parameters
+howmanyCo	1080
+newstart	0
+max_iter	200
+kT		0.0256
+dispfreq	100
+# cluster parameters
+np		4320
+neighbor_num	62
+howmanyclustercol	15
+ncluster1	1
+ncluster2	9
+ncluster3	38
+# initial configuration in case of newstart 0
+data_ini_filename	data_initial_C1080N1080.dat
+magmom_ini_filename	magmom_initial_C1080N1080.dat

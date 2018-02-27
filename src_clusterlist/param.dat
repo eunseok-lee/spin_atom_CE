@@ -1,0 +1,15 @@
+# lattice vectors
+pa	2.918000 0.0      0.0
+pb	0.0      5.000000 0.0
+pc	0.0      1.675600 4.7872
+#
+# number of basis
+nbasis	8
+basisfilename	basis.dat
+#
+# repetition
+n1	30
+n2	6
+n3	6
+neighbor_num_max	100
+neighbor_dist_max	6.5

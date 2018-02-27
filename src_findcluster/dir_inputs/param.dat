@@ -1,0 +1,8 @@
+corr_mat_ugs_filename	corr_mat_ugs.dat 
+n_corr_mat_ug_row	491 
+n_non_singular_col	86 
+howmanycluster		15 
+max_iter		20 
+kT			0.15 
+cvs_tol			0.01
+dispfreq		10

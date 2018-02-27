@@ -1,0 +1,56 @@
+ls##########################################################
+# clusterlist
+# written by Eunseok Lee
+# v1: Feb 2, 2018
+##########################################################
+
+This program is a part of the spin-atom CE package for the layered LNC system.
+This program formulates the clusters based on given lattice information.
+To compile this program, type 'make' at the prompt.
+
+>> make
+
+It will build an executable, run_clusterlist.
+
+To run the executable, the parameters in the following list should be provided.
+
+1) pa: the lattice vector a
+2) pb: the lattice vector b
+3) pc: the lattice vector a
+4) nbasis: the number of basis
+5) basisfilename: the name of file that contains the position of basis atoms - the positions are expressed as fractional coordinates.
+6) n1: the periodicity along a
+7) n2: the periodicity along b
+8) n3: the periodicity along c
+9) neighbor_dist_max: the maximally allowed neighbor distance of each atom - only the neighbor atoms within this distance will be considered.
+10) neighbor_num_max: the maximum number of neighbors of each atom - it will automatically reduced to the one corresponding to neighbor_dist_max.
+
+These parameters should be written in param.dat and the basis information would be written in a file, name by basisfilename.
+
+Both param.dat and the basis file (named by basisfilename) should be placed in the same directory as the executable.
+
+You can run the executable as follows.
+
+>>./run_clusterlist
+
+The results will be stored in dir_result, which will be created or updated during the running, as listed in the following list.
+
+1) result_param.dat: the parameters that specify the formulated clusters are stored in this file. Some of these parameters will be used later for the other programs.
+	1a) np: the number of cationic lattice sites (anion lattice sites are not considered for CE)
+	1b) neighbor_num: the number of neighbors of each atom
+	1c) ncluster1: the number of cluster 1 types
+	1d) ncluster2: the number of cluster 2 types
+	1e) ncluster3: the number of cluster 3 types
+
+2) map_to_cluster1.dat: mapping info, from a lattice site to point cluster type
+3) map_to_cluster2.dat: mapping info, from a pair of lattice sites to pair cluster type
+4) map_to_cluster3.dat: mapping info, from a set of three lattice sites to three-body cluster type
+5) nlist.dat: neighbor list
+6) nlist_dist.dat: list of distance to neighbor
+7) rp.dat: fractional coordinates of cationic lattice sites
+8) rpO.dat: fractional coordinates of anionic lattice sites
+9) cluster2list.dat: the configuration of each pair cluster type
+10) cluster3list.dat: the configuration of each three-body cluster type
+11) store_pos2.dat: the example pair cluster
+12) store_pos3.dat: the example three-body cluster
+

@@ -1,0 +1,46 @@
+##########################################################
+# findcluster_ternary
+# written by Eunseok Lee
+# v1: Feb 2, 2018
+##########################################################
+
+This program is a part of the spin-atom CE package for the layered LNC system.
+This program selects a set of cluster functions to produce the lowest cross validation score for given correlation matrix, using the Metropolis Monte Carlo algorithm to scan the configurational space.
+The corresponding effective cluster interactions are also obtained.
+To compile this program, GNU Scientific Library (GSL) should be pre-installed. Then, type 'make' at the prompt.
+
+>> make
+
+It will build an executable, run_findcluster.
+
+To run the executable, the parameters in the following list should be provided.
+
+1) n_corr_mat_ug_row: the number of data set after post processing
+2) n_non_singular_col: the number of non-singular cluster functions 
+3) howmanycluster: the number of cluster functions to be selected
+4) max_iter: maximum number of iteration
+5) kT: the thermal energy parameter in Boltzmann factor, in eV 
+6) cvs_tol: the critical value of cross-validation-score to finish the iteration
+7) dispfreq: frequency of displaying & storing 
+
+These parameters should be written in param.dat.
+
+In addition to param.dat, the following files also should be provided.
+1) corr_mat_ugs.dat: the correlation matrix after post processing
+2) Ef_ug.dat: the formation energy after post processing
+3) usefulcorr_col.dat: the list of non-singular cluster functions
+4) Ef_orig.dat: the formation energy of each data set - size of ndata
+
+The files 1)-4) can provided from the result of running data_to_corr_mat (another program of the package), or other external programs.
+
+You can run the executable as follows.
+
+>>./run_findcluster
+
+The results will be stored in dir_result, which will be created or updated during the running, as listed in the following list.
+
+1) cluster_set_N%d.dat: the selected cluster functions
+2) x.dat: the effective cluster interactions
+
+These results can be used for predictstructure_ce.
+
