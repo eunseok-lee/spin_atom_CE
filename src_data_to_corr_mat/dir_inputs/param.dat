@@ -5,3 +5,7 @@ ncluster2		9
 ncluster3		38
 ndata			507
 near_convh_cutoff	1.0
+# anomaly detection parameters
+use_anomaly_detection	1
+anomaly_score_crit	1.0
+knn			10
