@@ -28,8 +28,10 @@ void mat2d_prod(double*, int, int, double*, int, int, double*, int, int);
 double mat2d_sum_row(double*, int, int);
 void sort_array(double*, int);
 void sort_int_array(int*, int);
+void sort_array_ids(double*, int*, int);
 void obtain_corr_mat_mag_par(int, int, double*, int, int, int*, int*, int, int, int*, int*, int*, int, int);
 void obtain_convex_h_xy(double*, int, int*, double*, int);
+void eval_anomaly(double*, double*, int, int, double*, int, int);
 
 #define MASTER 0
 #define FROM_MASTER 1
@@ -69,6 +71,11 @@ int main(int argc, char **argv)
     else
         printf("Single CPU computing\n");
 
+    // anomaly detection parameters
+    int use_anomaly_detection;
+    double anomaly_score_crit;
+    int knn;
+    
     FILE *fp;
     char dirname[100];
     char paramfilename[100];
@@ -143,6 +150,33 @@ int main(int argc, char **argv)
             sscanf(buff_line,"%s %lf",dummy,&near_convh_cutoff);
             if (rank == MASTER)
                 printf("near_convh_cutoff = %f\n",near_convh_cutoff);
+        }
+        strcpy(param_name,"use_anomaly_detection");
+        param_name_len = strlen(param_name);
+        strncpy(dummy,buff_line,param_name_len);
+        dummy[param_name_len] = '\0';
+        if (strcmp(dummy,param_name)==0) {
+            sscanf(buff_line,"%s %d",dummy,&use_anomaly_detection);
+            if (rank == MASTER)
+                printf("use_anomaly_detection = %d\n",use_anomaly_detection);
+        }
+        strcpy(param_name,"knn");
+        param_name_len = strlen(param_name);
+        strncpy(dummy,buff_line,param_name_len);
+        dummy[param_name_len] = '\0';
+        if (strcmp(dummy,param_name)==0) {
+            sscanf(buff_line,"%s %d",dummy,&knn);
+            if (rank == MASTER)
+                printf("knn = %d\n",knn);
+        }
+        strcpy(param_name,"anomaly_score_crit");
+        param_name_len = strlen(param_name);
+        strncpy(dummy,buff_line,param_name_len);
+        dummy[param_name_len] = '\0';
+        if (strcmp(dummy,param_name)==0) {
+            sscanf(buff_line,"%s %lf",dummy,&anomaly_score_crit);
+            if (rank == MASTER)
+                printf("anomaly_score_crit = %f\n",anomaly_score_crit);
         }
     }
     fclose(fp);
@@ -275,14 +309,15 @@ int main(int argc, char **argv)
         for (i=0;i<ndata;i++)
             if (nondegenerate[i] == 1)
                 n_nondegenerate++;
-        double corr_mat_u[n_nondegenerate][ncorr_col];
+        double *corr_mat_u;
+        corr_mat_u = (double*) malloc(n_nondegenerate*ncorr_col*sizeof(double));
         double Ef_u[n_nondegenerate];
         int nC_u[n_nondegenerate];
         l = 0;
         for (i=0;i<ndata;i++)
             if (nondegenerate[i] == 1) {
                 for (j=0;j<ncorr_col;j++)
-                    corr_mat_u[l][j] = *(corr_mat+i*ncorr_col+j);
+                    *(corr_mat_u+l*ncorr_col+j) = *(corr_mat+i*ncorr_col+j);
                 Ef_u[l] = *(Ef+i);
                 nC_u[l] = nC[i];
                 l++;
@@ -297,11 +332,67 @@ int main(int argc, char **argv)
         for (i=0;i<n_nondegenerate;i++)
             fprintf(fp,"%d\n",nC_u[i]);
         fclose(fp);
-        printf("Denegrated data are filtered out; n_nondegenerate: %d\n\n",n_nondegenerate);
+        printf("Denegrated data were filtered out; n_nondegenerate: %d\n\n",n_nondegenerate);
+
+        // Apply anomaly detection
+        double anomaly_score[n_nondegenerate];
+        int anomaly_status[n_nondegenerate];
+        int n_normal = 0;
+        double max_anomaly_score = 0.0;
+        for (i=0;i<n_nondegenerate;i++)
+            anomaly_status[i] = 0;
+        eval_anomaly(anomaly_score, corr_mat_u, n_nondegenerate, ncorr_col, Ef_u, 1, knn);
+        for (i=0;i<n_nondegenerate;i++) {
+            printf("anomaly_score[%d] = %f\n",i,anomaly_score[i]);
+            if (anomaly_score[i] > max_anomaly_score)
+                max_anomaly_score = anomaly_score[i];
+        }
+        printf("max_anomaly_score = %f\n", max_anomaly_score);
+        if (use_anomaly_detection == 0)
+            anomaly_score_crit = max_anomaly_score*1.1;
+        for (i=0;i<n_nondegenerate;i++) {
+            if (anomaly_score[i] < anomaly_score_crit) {
+                anomaly_status[i] = 1;
+                n_normal++;
+            }
+        }
+        double *corr_mat_ua;
+        corr_mat_ua = (double*) malloc(n_normal*ncorr_col*sizeof(double));
+        double Ef_ua[n_normal];
+        int nC_ua[n_normal];
+        l = 0;
+        for (i=0;i<n_nondegenerate;i++)
+            if (anomaly_status[i] == 1) {
+                for (j=0;j<ncorr_col;j++)
+                    *(corr_mat_ua+l*ncorr_col+j) = *(corr_mat_u+i*ncorr_col+j);
+                Ef_ua[l] = Ef_u[i];
+                nC_ua[l] = nC_u[i];
+                l++;
+            }
+        sprintf(tmpwritefilename,"%s/tmp_Ef_ua.dat",dirname);
+        fp = fopen(tmpwritefilename, "w");
+        for (i=0;i<n_normal;i++)
+            fprintf(fp,"%f\n",Ef_ua[i]);
+        fclose(fp);
+        sprintf(tmpwritefilename,"%s/tmp_nC_ua.dat",dirname);
+        fp = fopen(tmpwritefilename, "w");
+        for (i=0;i<n_normal;i++)
+            fprintf(fp,"%d\n",nC_ua[i]);
+        fclose(fp);
+        sprintf(tmpwritefilename,"%s/tmp_corr_mat_ua.dat",dirname);
+        fp = fopen(tmpwritefilename, "w");
+        for (i=0;i<n_normal;i++) {
+            for (j=0;j<ncorr_col;j++)
+                fprintf(fp,"%f ",*(corr_mat_ua+i*ncorr_col));
+            fprintf(fp,"\n");
+        }
+        fclose(fp);
+        printf("Anomaly data sets were filtered out; n_normal: %d\n\n",n_normal);
+        
         // Generate convex hull
         int n_bin = np/2+1;
         double ef_conv[n_bin];
-        obtain_convex_h_xy(ef_conv,n_bin,nC_u,Ef_u,n_nondegenerate);
+        obtain_convex_h_xy(ef_conv,n_bin,nC_ua,Ef_ua,n_normal);
         sprintf(tmpwritefilename,"%s/ef_conv_hull.dat",dirname);
         fp = fopen(tmpwritefilename, "w");
         for (i=0;i<n_bin;i++)
@@ -310,9 +401,9 @@ int main(int argc, char **argv)
 
         // select data sets near convex hull
         int n_corr_mat_ug_row = 0;
-        int near_convh[n_nondegenerate];
-        for (i=0;i<n_nondegenerate;i++)
-            if (Ef_u[i] - ef_conv[nC_u[i]] < near_convh_cutoff*nfu) {
+        int near_convh[n_normal];
+        for (i=0;i<n_normal;i++)
+            if (Ef_ua[i] - ef_conv[nC_ua[i]] < near_convh_cutoff*nfu) {
                 near_convh[i] = 1;
                 n_corr_mat_ug_row++;
             }
@@ -320,23 +411,24 @@ int main(int argc, char **argv)
                 near_convh[i] = 0;
         sprintf(tmpwritefilename,"%s/tmp_near_convh.dat",dirname);
         fp = fopen(tmpwritefilename, "w");
-        for (i=0;i<n_nondegenerate;i++)
+        for (i=0;i<n_normal;i++)
             fprintf(fp,"%d\n",near_convh[i]);
         fclose(fp);
         
-        double corr_mat_ug[n_corr_mat_ug_row][ncorr_col];
+        double *corr_mat_ug;
+        corr_mat_ug = (double*) malloc(n_corr_mat_ug_row*ncorr_col*sizeof(double));
         double Ef_ug[n_corr_mat_ug_row];
         int nC_ug[n_corr_mat_ug_row];
         l = 0;
-        for (i=0;i<n_nondegenerate;i++)
+        for (i=0;i<n_normal;i++)
             if (near_convh[i] == 1) {
                 for (j=0;j<ncorr_col;j++)
-                    corr_mat_ug[l][j] = corr_mat_u[i][j];
-                Ef_ug[l] = Ef_u[i];
-                nC_ug[l] = nC_u[i];
+                    *(corr_mat_ug+l*ncorr_col+j) = *(corr_mat_ua+i*ncorr_col+j);
+                Ef_ug[l] = Ef_ua[i];
+                nC_ug[l] = nC_ua[i];
                 l++;
             }
-        printf("States beyond tol+convex hull are fileted out; n_corr_mat_ug_row: %d\n\n",n_corr_mat_ug_row);
+        printf("States beyond tol+convex hull were filterd out; n_corr_mat_ug_row: %d\n\n",n_corr_mat_ug_row);
 
         // select the non-singular columns only
         int n_non_singular_col;
@@ -346,7 +438,8 @@ int main(int argc, char **argv)
         for (i=1;i<ncorr_col;i++) {
             ctn = 0;
             for (j=1;j<n_corr_mat_ug_row;j++)
-                if (corr_mat_ug[j][i] != corr_mat_ug[0][i]) {
+//                if (corr_mat_ug[j][i] != corr_mat_ug[0][i]) {
+                if ( *(corr_mat_ug+j*ncorr_col+i) != *(corr_mat_ug+0*ncorr_col+i) ) {
                     ctn = 1;
                     break;
                 }
@@ -357,14 +450,14 @@ int main(int argc, char **argv)
             else
                 col_singularity[i] = 0;
         }
-
-        double corr_mat_ugs[n_corr_mat_ug_row][n_non_singular_col];
+        double *corr_mat_ugs;
+        corr_mat_ugs = (double*) malloc(n_corr_mat_ug_row*n_non_singular_col*sizeof(double));
         int usefulcorr_col[n_non_singular_col];
         l = 0;
         for (i=0;i<ncorr_col;i++)
             if (col_singularity[i] == 1) {
                 for (j=0;j<n_corr_mat_ug_row;j++)
-                    corr_mat_ugs[j][l] = corr_mat_ug[j][i];
+                    *(corr_mat_ugs+j*n_non_singular_col+l) = *(corr_mat_ug+j*n_non_singular_col+i);
                 usefulcorr_col[l] = i;
                 l++;
             }
@@ -385,7 +478,7 @@ int main(int argc, char **argv)
         fp4 = fopen(paramfilename,"w");
         for (i=0;i<n_corr_mat_ug_row;i++) {
             for (j=0;j<ncorr_col;j++)
-                fprintf(fp1,"%f ",corr_mat_ugs[i][j]);
+                fprintf(fp1,"%f ",*(corr_mat_ugs+i*ncorr_col+j));
             fprintf(fp1,"\n");
             fprintf(fp2,"%f\n",Ef_ug[i]);
         }

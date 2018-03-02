@@ -21,6 +21,9 @@ To run the executable, the parameters in the following list should be provided.
 5) ncluster3: the number of cluster 3 types
 6) ndata: the number of data
 7) near_convh_cutoff: the critical energy to filter out the data with extremely high Ef
+8) use_anomaly_detection: 1-use, 0-not use
+9) anomaly_score_crit: critical value of anomaly score, to determine the defective data
+10) knn: the knn-th nearest neighbor instances will be considered for anomaly score.
 
 These parameters should be written in param.dat.
 
