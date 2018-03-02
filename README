@@ -31,7 +31,8 @@ The version 1 targeted R-3m space group materials, such as the layered LiCoyNi1-
 Although they developed for the layered LiCoyNi1-yO2, the sub-programs 2)~4) can also be applied for any material system with 3x3 DOF at each lattice site if the classification of cluster functions and mapping from atomic clusters to cluster function are provided.
 
 * * *
-k-NN algorithm for anomaly detection was implemented into and tested in the MATLAB version of findcluster (sub-program 3). It will be implemented in the next version of the package version 1.1.
+k-NN algorithm for anomaly detection was implemented into data_to_corr_mat (sub-program 2).
+k-NN algorithm for anomaly detection was tested and is scheduled to be implemented into findcluster (sub-program 3) in the next version.
 
 * * *
 Version 2 is being developed for systems with more DOF.
