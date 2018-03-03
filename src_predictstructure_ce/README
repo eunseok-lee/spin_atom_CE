@@ -14,7 +14,7 @@ It will build an executable, run_findcluster_ce.
 
 To run the executable, the parameters in the following list should be provided.
 
-1) howmanyCo: the number of Co atoms, to 
+1) howmanyCo: the number of Co atoms in Li_{1-x}x[Co_{1-y}Ni_y]_{1+x}O2
 2) newstart: 1-new start (random initial configurations), 0-restart (load existing initial configurations)
 3) max_iter: the maximum number of iteration
 4) kT: the thermal energy in Boltzmann factor
