@@ -477,8 +477,8 @@ int main(int argc, char **argv)
         fp3 = fopen(usefulcorr_col_filename,"w");
         fp4 = fopen(paramfilename,"w");
         for (i=0;i<n_corr_mat_ug_row;i++) {
-            for (j=0;j<ncorr_col;j++)
-                fprintf(fp1,"%f ",*(corr_mat_ugs+i*ncorr_col+j));
+            for (j=0;j<n_non_singular_col;j++)
+                fprintf(fp1,"%f ",*(corr_mat_ugs+i*n_non_singular_col+j));
             fprintf(fp1,"\n");
             fprintf(fp2,"%f\n",Ef_ug[i]);
         }
