@@ -653,7 +653,7 @@ int main(int argc, char **argv) {
                 if (Ef_trial < Ef_trial_min) {
                     Ef_trial_min = Ef_trial;
                     mat_copy_int(data_trial_min, data_trial, 1, np, 1);
-                    mat_copy_int(magmom_trial_min, data_trial, 1, np, 1);
+                    mat_copy_int(magmom_trial_min, magmom_trial, 1, np, 1);
                     mat_copy_double(corr_mat_trial_min, corr_mat_trial, 1, ncorr_col, 1);
                 }
                 n_event_accept++;
