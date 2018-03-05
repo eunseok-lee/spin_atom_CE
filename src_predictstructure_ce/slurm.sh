@@ -8,10 +8,6 @@
 #SBATCH -o job.%N.%j.out # STDOUT 
 #SBATCH -e job.%N.%j.err # STDERR
 
-# send mail for event 
-#SBATCH --mail-type=END,FAIL
-#SBATCH --mail-user=eunseok.lee@uah.edu
-
 module load openmpi/gcc/64/1.8.5
 
 mpirun -np 24 run_predictstructure_par
