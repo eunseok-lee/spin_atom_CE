@@ -39,7 +39,7 @@ You can run the executable as follows.
 
 The results will be stored in dir_result, which will be created or updated during the running, as listed in the following list.
 
-1) cluster_set_N%d.dat: the selected cluster functions
+1) cluster_set_N%d.dat: the selected cluster functions. The second column of this file can be used as the input file (cluster_set_min.dat) for predictstructure_ce (sub-program 4)
 2) x.dat: the effective cluster interactions
 
 These results can be used for predictstructure_ce.
