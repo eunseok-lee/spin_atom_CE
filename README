@@ -9,26 +9,26 @@ This computational package is to perform spin-atom cluster expansion (CE) for te
 The package consists of four sub-programs, listed in the following list. Each program can run independently if all required parameters are provided correctly.
 
 1) clusterlist: formulate the clusters and cluster functions based on the geometrical information of lattice site.
-2) data_to_corr_mat: convert the coupled configuration of atomic species and magnetic moment to the correlation matrix of CE
-3) findcluster: select the most representative cluster functions (expansion basis) and the corresponding effective cluster interactions (expansion coefficient)
-4) predictstructure_ce: predict the lowest energy structure using the result of 3)
+2) data_to_corr_mat: convert the coupled configuration of atomic species and magnetic moment to the correlation matrix of CE.
+3) findcluster: select the most representative cluster functions (expansion basis) and the corresponding effective cluster interactions (expansion coefficient).
+4) predictstructure_ce: predict the lowest energy structure using the result of sub-program 3.
 
 The main function of the package is realized by sub-programs 3) and 4).
 
-The every code was written in C. The most time consuming part of the package comes from the calculation of the correlation matrix. Hence, sub-programs 2), 3), and 4) were developed in parallel version, using MPI. Sub-program 1) is light and serial version. 
+The every code was written in C. The most time consuming part of the package comes from the calculation of the correlation matrix. Hence, sub-programs 2, 3, and 4 were developed in parallel version, using MPI. Sub-program 1 is light and serial version. 
 
 GNU Scientific Library (GSL) was used in multiple parts of the package and hence the installation of GSL is pre-requisite for compilation (refer to https://www.gnu.org/software/gsl/ for further information).
 
 Requirement: mpicc, GSL
 
-Although the sub-programs 2)~4) will be compiled by mpicc, they can run on single-cpu.
+Although the sub-programs 2~4 will be compiled by mpicc, they can run on single-cpu.
 
 To compile each sub-program, move in the src_(sub-program) and follow the direction in README there.
 
 <Version 1>
 The version 1 targeted R-3m space group materials, such as the layered LiCoyNi1-yO2. Each cationic lattice site is be occupied by any of Li, Co, or Ni and can have any of up-, down-, and zero-magnetic moment. Hence, the total degrees of freedom (DOF) is 3x3=9.
 
-Although they developed for the layered LiCoyNi1-yO2, the sub-programs 2)~4) can also be applied for any material system with 3x3 DOF at each lattice site if the classification of cluster functions and mapping from atomic clusters to cluster function are provided.
+Although they developed for the layered LiCoyNi1-yO2, the sub-programs 2~4 can also be applied for any material system with 3x3 DOF at each lattice site if the classification of cluster functions and mapping from atomic clusters to cluster function are provided.
 
 * * *
 k-NN algorithm for anomaly detection was implemented into data_to_corr_mat (sub-program 2).
