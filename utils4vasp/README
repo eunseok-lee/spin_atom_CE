@@ -1,0 +1,54 @@
+##########################################################
+# utilities to process the data produced by VASP
+# written by Eunseok Lee
+# v1: Feb 2, 2018
+##########################################################
+
+The data input for sub-program 2, which formulates the correlation matrix from the coupled configuration of atomic-species and spin (or magnetic moment), should be provided externally from first-principles calculations, such as DFT calculations. Although any DFT computational codes can be used to produce the data, the data should be properly formatted as the inputs for the sub-program 2.
+
+This package provides a few executables that process the result of VASP (The Vienna Ab-initio Simulation Package), a popular DFT computational code.
+
+Before running the executables, the VASP results should be corrected at one place. One data set consists of three VASP output files, CONTCAR, OUTCAR, and OSZICAR, for one configuration of atomic species and spin. These three files need to be stored in a same directory, named as data*, where * indicates the id of *-th data set. A few example of these directories (data1, data2, data3, data4) are shown in the current directory.
+
+Then, execute extractdatainfo and then extractmaginfo as follows.
+
+> ./extractdatainfo n1 n2
+> ./extractmaginfo n1 n2
+
+where n1 and n2 indicate the starting and ending ids of data sets that will be processed. For example, if you want to process of data sets, data1~data16, n1 = 1 and n2 = 16. 
+
+The extractdatainfo and extractmaginfo above are bash script. So you don't need to compile them. However two additional utility executables, vasp2datamag and extend2largercell, are C-code and hence need to be compiled. You can type 'make' at the prompt for that.
+
+> make
+
+Then, two executables, vasp2datamag and extend2largercell, will be built.
+
+Then, execute vasp2datamag as follows.
+
+> ./vasp2datamag m1 m2 m3
+
+where m1, m2, m3 are the criteria to determine the spin; if the magnetic moment is less than m1 or greater than m1, the spin species will be determined to be 0 or 1, respectively.
+
+To execute vasp2datamag, rp.dat should be located in the same directory as vasp2datamag.
+
+After vasp2datamag executed, four output files, data_orig.dat, magmom_orig.dat, E_orig.dat, and Ef_orig.dat, will be produced. They can be used as the inputs of sub-program 2.
+
+In some case, data_orig.dat, magmom_orig.dat, E_orig.dat, and Ef_orig.dat may need to convert to the ones of larger size supercell. For that purpose, you can use extend2largercell as follows.
+
+> ./extend2largercell i1 i2 i3 j1 j2 j3
+
+where i1~i3 are the original periodicity of data while j1~j3 are the periodicity of data in larger cell. That is, the atomic-species and spin-species in i1xi2xi3 supercell system will be converted to the ones in j1xj2xj3 supercell system. To run this executable, you need to provide rp_i1_i2_i3.dat and rp_j1_j2_j3.dat, which can be generated from sub-program 1. Of course data_orig.dat, magmom_orig.dat, E_orig.dat, and Ef_orig.dat also should be provided. All these required files need to exist in the same directory as extend2largercell
+
+
+
+
+
+
+
+
+
+
+
+
+
+
