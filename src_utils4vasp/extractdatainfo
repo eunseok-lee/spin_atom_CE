@@ -1,0 +1,107 @@
+for ((dir=$1; dir<=$2; dir++))
+do
+
+dirname="data$dir"
+filename="$dirname/CONTCAR"
+
+if [ -f $filename ]
+then
+
+head -2 $filename | tail -1 > $dirname/lc.dat
+
+head -5 $filename | tail -3 > $dirname/kvector.dat
+
+element=`head -6 $filename | tail -1`
+arr2=($element)
+
+natoms=`head -7 $filename | tail -1`
+arr=($natoms)
+
+(( nitem=`echo ${#arr[*]}`-1 ))
+
+nL=0
+nM=0
+nN=0
+nO=0
+
+for item in `eval echo {0..$nitem}`
+do
+
+if [ ${arr2[item]} == Li ]
+then
+nL=`echo ${arr[item]}`
+fi
+if [ ${arr2[item]} == Mn ]
+then
+nM=`echo ${arr[item]}`
+fi
+if [ ${arr2[item]} == Ni ]
+then
+nN=`echo ${arr[item]}`
+fi
+if [ ${arr2[item]} == O ]
+then
+nO=`echo ${arr[item]}`
+fi
+
+done
+
+touch $dirname/posL.dat
+touch $dirname/posM.dat
+touch $dirname/posN.dat
+touch $dirname/posO.dat
+touch $dirname/posL0.dat
+touch $dirname/posM0.dat
+touch $dirname/posN0.dat
+touch $dirname/posO0.dat
+
+n=$(( $nL+8 ))
+head -$n $filename | tail -$nL | sed 's/T   T   T//' > $dirname/posL.dat
+
+if [ $nM -gt 0 ]
+then 
+n=$(( $nL+$nM+8 ))
+head -$n $filename | tail -$nM | sed 's/T   T   T//' > $dirname/posM.dat
+fi
+
+if [ $nN -gt 0 ]
+then 
+n=$(( $nL+$nM+$nN+8 ))
+head -$n $filename | tail -$nN | sed 's/T   T   T//' > $dirname/posN.dat
+fi
+
+n=$(( $nL+$nM+$nN+$nO+8 ))
+head -$n $filename | tail -$nO | sed 's/T   T   T//' > $dirname/posO.dat
+
+head -5 $filename | tail -3 > $dirname/kvector.dat
+
+filename="$dirname/POSCAR"
+
+n=$(( $nL+8 ))
+head -$n $filename | tail -$nL | sed 's/T   T   T//' | sed 's/Li//' > $dirname/posL0.dat
+
+if [ $nM -gt 0 ]
+then 
+n=$(( $nL+$nM+8 ))
+head -$n $filename | tail -$nM | sed 's/T   T   T//' | sed 's/Mn//' > $dirname/posM0.dat 
+fi
+
+if [ $nN -gt 0 ]
+then 
+n=$(( $nL+$nM+$nN+8 ))
+head -$n $filename | tail -$nN | sed 's/T   T   T//' | sed 's/Ni//' > $dirname/posN0.dat 
+fi
+
+n=$(( $nL+$nM+$nN+$nO+8 ))
+head -$n $filename | tail -$nO | sed 's/T   T   T//' | sed 's/O//' > $dirname/posO0.dat
+
+head -5 $filename | tail -3 > $dirname/kvector0.dat
+
+tail -1 $dirname/OSZICAR | sed 's/F=//;s/E0=//;s/d\ E\ =//;s/mag=//' > $dirname/energy.dat 
+
+echo "data of atomic species and energy in $dirname was extracted"
+
+fi
+
+done
+

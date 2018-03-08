@@ -1,0 +1,21 @@
+for ((dir=$1; dir<=$2; dir++))
+do
+
+dirname="data$dir"
+filename="$dirname/OUTCAR"
+
+if [ -f $filename ]
+then
+
+a=`more $filename | grep -n "magnetization (x)" | tail -1 | sed 's/:\ magnetization\ (x)//'`
+b=`more $filename | grep NIONS | cut -d ' ' -f31-`
+c=$(( $a+$b+3 ))
+d=$(( $b ))
+head -$c $filename | tail -$d > $dirname/mag_val.dat
+
+echo "magnetic moment in $dirname was extracted"
+
+fi
+
+done
+
