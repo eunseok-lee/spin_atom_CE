@@ -291,7 +291,7 @@ int main(int argc, char **argv)
         fp2 = fopen(cluster_set_filename,"w");
         fp3 = fopen(eci_filename,"w");
         for (i=0;i<howmanycluster;i++) {
-            fprintf(fp2,"%4d\t%4d\n",cluster_set1_min[i],usefulcorr_col[cluster_set1_min[i]],eci[i]);
+            fprintf(fp2,"%4d\t%4d\n",cluster_set1_min[i],usefulcorr_col[cluster_set1_min[i]]);
             fprintf(fp3,"%.4f\n",eci[i]);
         }
     }
