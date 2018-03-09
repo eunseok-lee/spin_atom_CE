@@ -25,7 +25,7 @@ To run the executable, the parameters in the following list should be provided.
 9) neighbor_dist_max: the maximally allowed neighbor distance of each atom - only the neighbor atoms within this distance will be considered.
 10) neighbor_num_max: the maximum number of neighbors of each atom - it will automatically reduced to the one corresponding to neighbor_dist_max.
 
-These parameters should be written in param.dat and the basis information would be written in a file, name by basisfilename.
+These parameters above should be written in param.dat and the basis information would be written in a file, name by basisfilename.
 
 Both param.dat and the basis file (named by basisfilename) should be placed in the same directory as the executable.
 
