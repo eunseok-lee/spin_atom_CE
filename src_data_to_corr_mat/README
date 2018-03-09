@@ -12,7 +12,7 @@ To compile this program, 'make' at the prompt.
 
 It will build an executable, run_data_to_corr_mat.
 
-To run the executable, the parameters in the following list should be provided.
+To run the executable, the parameters in the following list should be provided (these parameters should be written in param.dat).
 
 1) np: the number of cationic lattice sites (anion lattice sites are not considered for CE)
 2) neighbor_num: the number of neighbors of each atom
@@ -24,8 +24,6 @@ To run the executable, the parameters in the following list should be provided.
 8) use_anomaly_detection: 1-use, 0-not use
 9) anomaly_score_crit: critical value of anomaly score, to determine the defective data
 10) knn: the knn-th nearest neighbor instances will be considered for anomaly score.
-
-These parameters should be written in param.dat.
 
 In addition to param.dat, the following files also should be provided.
 1) data_orig.dat: atomic species at each lattice site - size of ndata x np 
