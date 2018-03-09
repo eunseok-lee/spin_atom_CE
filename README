@@ -13,9 +13,7 @@ The package consists of four sub-programs, listed in the following list. Each pr
 3) findcluster: select the most representative cluster functions (expansion basis) and the corresponding effective cluster interactions (expansion coefficient).
 4) predictstructure_ce: predict the lowest energy structure using the result of sub-program 3.
 
-The main function of the package is realized by sub-programs 3) and 4).
-
-The every code was written in C. The most time consuming part of the package comes from the calculation of the correlation matrix. Hence, sub-programs 2, 3, and 4 were developed in parallel version, using MPI. Sub-program 1 is light and serial version. 
+The every code is written in C. The most time consuming part of the package comes from the calculation of the correlation matrix. Hence, sub-programs 2, 3, and 4 are developed in parallel version, using MPI. Sub-program 1 is light and serial version. 
 
 GNU Scientific Library (GSL) was used in multiple parts of the package and hence the installation of GSL is pre-requisite for compilation (refer to https://www.gnu.org/software/gsl/ for further information).
 
