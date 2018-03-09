@@ -13,7 +13,7 @@ To compile this program, GNU Scientific Library (GSL) should be pre-installed. T
 
 It will build an executable, run_findcluster.
 
-To run the executable, the parameters in the following list should be provided.
+To run the executable, the parameters in the following list should be provided (these parameters should be written in param.dat).
 
 1) n_corr_mat_ug_row: the number of data set after post processing
 2) n_non_singular_col: the number of non-singular cluster functions 
@@ -22,8 +22,6 @@ To run the executable, the parameters in the following list should be provided.
 5) kT: the thermal energy parameter in Boltzmann factor, in eV 
 6) cvs_tol: the critical value of cross-validation-score to finish the iteration
 7) dispfreq: frequency of displaying & storing 
-
-These parameters should be written in param.dat.
 
 In addition to param.dat, the following files also should be provided.
 1) corr_mat_ugs.dat: the correlation matrix after post processing
