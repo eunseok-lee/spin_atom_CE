@@ -20,7 +20,7 @@ arr=($natoms)
 (( nitem=`echo ${#arr[*]}`-1 ))
 
 nL=0
-nM=0
+nC=0
 nN=0
 nO=0
 
@@ -31,9 +31,9 @@ if [ ${arr2[item]} == Li ]
 then
 nL=`echo ${arr[item]}`
 fi
-if [ ${arr2[item]} == Mn ]
+if [ ${arr2[item]} == Co ]
 then
-nM=`echo ${arr[item]}`
+nC=`echo ${arr[item]}`
 fi
 if [ ${arr2[item]} == Ni ]
 then
@@ -47,30 +47,30 @@ fi
 done
 
 touch $dirname/posL.dat
-touch $dirname/posM.dat
+touch $dirname/posC.dat
 touch $dirname/posN.dat
 touch $dirname/posO.dat
 touch $dirname/posL0.dat
-touch $dirname/posM0.dat
+touch $dirname/posC0.dat
 touch $dirname/posN0.dat
 touch $dirname/posO0.dat
 
 n=$(( $nL+8 ))
 head -$n $filename | tail -$nL | sed 's/T   T   T//' > $dirname/posL.dat
 
-if [ $nM -gt 0 ]
+if [ $nC -gt 0 ]
 then 
-n=$(( $nL+$nM+8 ))
-head -$n $filename | tail -$nM | sed 's/T   T   T//' > $dirname/posM.dat
+n=$(( $nL+$nC+8 ))
+head -$n $filename | tail -$nC | sed 's/T   T   T//' > $dirname/posC.dat
 fi
 
 if [ $nN -gt 0 ]
 then 
-n=$(( $nL+$nM+$nN+8 ))
+n=$(( $nL+$nC+$nN+8 ))
 head -$n $filename | tail -$nN | sed 's/T   T   T//' > $dirname/posN.dat
 fi
 
-n=$(( $nL+$nM+$nN+$nO+8 ))
+n=$(( $nL+$nC+$nN+$nO+8 ))
 head -$n $filename | tail -$nO | sed 's/T   T   T//' > $dirname/posO.dat
 
 head -5 $filename | tail -3 > $dirname/kvector.dat
@@ -80,19 +80,19 @@ filename="$dirname/POSCAR"
 n=$(( $nL+8 ))
 head -$n $filename | tail -$nL | sed 's/T   T   T//' | sed 's/Li//' > $dirname/posL0.dat
 
-if [ $nM -gt 0 ]
+if [ $nC -gt 0 ]
 then 
-n=$(( $nL+$nM+8 ))
-head -$n $filename | tail -$nM | sed 's/T   T   T//' | sed 's/Mn//' > $dirname/posM0.dat 
+n=$(( $nL+$nC+8 ))
+head -$n $filename | tail -$nC | sed 's/T   T   T//' | sed 's/Co//' > $dirname/posC0.dat 
 fi
 
 if [ $nN -gt 0 ]
 then 
-n=$(( $nL+$nM+$nN+8 ))
+n=$(( $nL+$nC+$nN+8 ))
 head -$n $filename | tail -$nN | sed 's/T   T   T//' | sed 's/Ni//' > $dirname/posN0.dat 
 fi
 
-n=$(( $nL+$nM+$nN+$nO+8 ))
+n=$(( $nL+$nC+$nN+$nO+8 ))
 head -$n $filename | tail -$nO | sed 's/T   T   T//' | sed 's/O//' > $dirname/posO0.dat
 
 head -5 $filename | tail -3 > $dirname/kvector0.dat

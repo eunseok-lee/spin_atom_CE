@@ -27,7 +27,7 @@ Then, execute vasp2datamag as follows.
 
 > ./vasp2datamag m1 m2 m3
 
-where m1, m2, m3 are the criteria to determine the spin; if the magnetic moment is less than m1 or greater than m1, the spin species will be determined to be 0 or 1, respectively.
+where m1, m2, m3 are the criteria to determine the spin of Li, Co, and Ni, respectively; if the magnetic moment is less than m1 or greater than m1, the spin species will be determined to be 0 or 1, respectively.
 
 To execute vasp2datamag, rp.dat should be located in the same directory as vasp2datamag.
 

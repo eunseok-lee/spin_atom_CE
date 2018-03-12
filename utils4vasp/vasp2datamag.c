@@ -5,9 +5,9 @@
 #include <sys/stat.h>
 
 int main(int argc, char **argv) {
-    
+
     FILE *fp1, *fp2, *fp3, *fp4, *fp5, *fp6;
-    int i, j, k, np, npL, npM, npN;
+    int i, j, k, np, npL, npC, npN;
     int setn, ctr;
     int ndata;
     double *rp;
@@ -23,11 +23,11 @@ int main(int argc, char **argv) {
     double dist_cutoff;
     double dij[3];
     double dist;
-    
+
     double magLi = atof(argv[1]);
-    double magMn = atof(argv[2]);
+    double magCo = atof(argv[2]);
     double magNi = atof(argv[3]);
-    
+
     for (i=1;i<100000;i++) {
         sprintf(dirname,"data%d",i);
         struct stat st = {0};
@@ -35,7 +35,7 @@ int main(int argc, char **argv) {
             break;
     }
     ndata = i-1;
-    
+
     printf("ndata = %d\n",ndata);
     fp1 = fopen("rp.dat","r");
     np = 0;
@@ -49,7 +49,7 @@ int main(int argc, char **argv) {
     fclose(fp1);
     printf("np = %d\n", np);
     printf("magLi = %f\n",magLi);
-    printf("magMn = %f\n",magMn);
+    printf("magCo = %f\n",magCo);
     printf("magNi = %f\n",magNi);
 
     rp = (double*) calloc (np*3,sizeof(double));
@@ -66,17 +66,17 @@ int main(int argc, char **argv) {
     }
     fclose(fp1);
     printf("----------------------------------------\n");
-    
+
     int data[ndata][np];
     int magmom[ndata][np];
     int nL[ndata];
-    int nM[ndata];
+    int nC[ndata];
     int nN[ndata];
     double E[ndata];
     double Ef[ndata];
-    double *rpL, *rpM, *rpN;
-    int *Lid, *Mid, *Nid;
-    
+    double *rpL, *rpC, *rpN;
+    int *Lid, *Cid, *Nid;
+
     // fill up data and magmom
     for (i=0;i<ndata;i++)
         for (j=0;j<np;j++) {
@@ -88,11 +88,11 @@ int main(int argc, char **argv) {
         printf("data%d is being processed\n",setn+1);
         sprintf(datfilename,"data%d/posL.dat",setn+1);
         fp2 = fopen(datfilename,"r");
-        sprintf(datfilename,"data%d/posM.dat",setn+1);
+        sprintf(datfilename,"data%d/posC.dat",setn+1);
         fp3 = fopen(datfilename,"r");
         sprintf(datfilename,"data%d/posN.dat",setn+1);
         fp4 = fopen(datfilename,"r");
-        
+
         npL = 0;
         while(fgets(buff_line,sizeof(buff_line),fp2) != NULL) {
             if (buff_line[0] == '\n') {
@@ -102,15 +102,15 @@ int main(int argc, char **argv) {
                 npL++;
         }
         printf("npL = %d\n", npL);
-        npM = 0;
+        npC = 0;
         while(fgets(buff_line,sizeof(buff_line),fp3) != NULL) {
             if (buff_line[0] == '\n') {
                 continue;
             }
             else
-                npM++;
+                npC++;
         }
-        printf("npM = %d\n", npM);
+        printf("npC = %d\n", npC);
         npN = 0;
         while(fgets(buff_line,sizeof(buff_line),fp4) != NULL) {
             if (buff_line[0] == '\n') {
@@ -123,21 +123,21 @@ int main(int argc, char **argv) {
         fclose(fp2);
         fclose(fp3);
         fclose(fp4);
-    
+
         rpL = (double*) calloc(npL*3,sizeof(double));
-        rpM = (double*) calloc(npM*3,sizeof(double));
+        rpC = (double*) calloc(npC*3,sizeof(double));
         rpN = (double*) calloc(npN*3,sizeof(double));
 
         Lid = (int*) malloc(npL*sizeof(int));
-        Mid = (int*) malloc(npM*sizeof(int));
+        Cid = (int*) malloc(npC*sizeof(int));
         Nid = (int*) malloc(npN*sizeof(int));
         for (i=0;i<npL;i++)
             *(Lid+i) = -1;
-        for (i=0;i<npM;i++)
-            *(Mid+i) = -1;
+        for (i=0;i<npC;i++)
+            *(Cid+i) = -1;
         for (i=0;i<npN;i++)
             *(Nid+i) = -1;
-        
+
         printf("posL data is read\n");
         sprintf(datfilename,"data%d/posL.dat",setn+1);
         fp2 = fopen(datfilename,"r");
@@ -151,19 +151,19 @@ int main(int argc, char **argv) {
 //            printf("%d\t%f %f %f\n",i,*(rpL+3*i),*(rpL+3*i+1),*(rpL+3*i+2));
         }
 
-        printf("posM data is read\n");
-        sprintf(datfilename,"data%d/posM.dat",setn+1);
+        printf("posC data is read\n");
+        sprintf(datfilename,"data%d/posC.dat",setn+1);
         fp3 = fopen(datfilename,"r");
-        for (i=0;i<npM;i++) {
+        for (i=0;i<npC;i++) {
             fscanf(fp3, "%lf", &tmp);
-            *(rpM+3*i) = tmp;
+            *(rpC+3*i) = tmp;
             fscanf(fp3, "%lf", &tmp);
-            *(rpM+3*i+1) = tmp;
+            *(rpC+3*i+1) = tmp;
             fscanf(fp3, "%lf", &tmp);
-            *(rpM+3*i+2) = tmp;
-//            printf("%d\t%f %f %f\n",i,*(rpM+3*i),*(rpM+3*i+1),*(rpM+3*i+2));
+            *(rpC+3*i+2) = tmp;
+//            printf("%d\t%f %f %f\n",i,*(rpC+3*i),*(rpC+3*i+1),*(rpC+3*i+2));
         }
-    
+
         printf("posN data is read\n");
         sprintf(datfilename,"data%d/posN.dat",setn+1);
         fp4 = fopen(datfilename,"r");
@@ -177,7 +177,7 @@ int main(int argc, char **argv) {
 //            printf("%d\t%f %f %f\n",i,*(rpN+3*i),*(rpN+3*i+1),*(rpN+3*i+2));
         }
         fclose(fp4);
-    
+
         for (i=0;i<npL;i++) {
             dist_cutoff = ind_dist_cutoff;
             ctr = 0;
@@ -200,17 +200,17 @@ int main(int argc, char **argv) {
             else
                 printf("Lid[%d] = %d\n",i,Lid[i]);
         }
-        for (i=0;i<npM;i++) {
+        for (i=0;i<npC;i++) {
             dist_cutoff = ind_dist_cutoff;
             ctr = 0;
-            while (dist_cutoff < max_dist_cutoff && Mid[i] < 0) {
+            while (dist_cutoff < max_dist_cutoff && Cid[i] < 0) {
                 for (j=0;j<np;j++) {
-                    dij[0] = pow(fmod(*(rp+3*j+0) - *(rpM+3*i+0) + 0.5, 1.0) - 0.5, 2.0);
-                    dij[1] = pow(fmod(*(rp+3*j+1) - *(rpM+3*i+1) + 0.5, 1.0) - 0.5, 2.0);
-                    dij[2] = pow(fmod(*(rp+3*j+2) - *(rpM+3*i+2) + 0.5, 1.0) - 0.5, 2.0);
+                    dij[0] = pow(fmod(*(rp+3*j+0) - *(rpC+3*i+0) + 0.5, 1.0) - 0.5, 2.0);
+                    dij[1] = pow(fmod(*(rp+3*j+1) - *(rpC+3*i+1) + 0.5, 1.0) - 0.5, 2.0);
+                    dij[2] = pow(fmod(*(rp+3*j+2) - *(rpC+3*i+2) + 0.5, 1.0) - 0.5, 2.0);
                     dist = sqrt(dij[0] + dij[1] + dij[2]);
                     if (dist < dist_cutoff) {
-                        Mid[i] = j;
+                        Cid[i] = j;
                         ctr = 1;
                         break;
                     }
@@ -218,9 +218,9 @@ int main(int argc, char **argv) {
                 }
             }
             if (ctr == 0)
-                printf("[E] Mid[%d] not identified\n",i);
+                printf("[E] Cid[%d] not identified\n",i);
             else
-                printf("Mid[%d] = %d\n",i,Mid[i]);
+                printf("Cid[%d] = %d\n",i,Cid[i]);
         }
         for (i=0;i<npN;i++) {
             dist_cutoff = ind_dist_cutoff;
@@ -246,14 +246,14 @@ int main(int argc, char **argv) {
         }
 
         for (i=0;i<npL;i++)
-            data[setn][Lid[i]] =  2;
-        for (i=0;i<npM;i++)
-            data[setn][Mid[i]] =  1;
+            data[setn][Lid[i]] =  1;
+        for (i=0;i<npC;i++)
+            data[setn][Cid[i]] =  0;
         for (i=0;i<npN;i++)
             data[setn][Nid[i]] = -1;
         sprintf(datfilename,"data%d/mag_val.dat",setn+1);
         fp5 = fopen(datfilename,"r");
-        for (i=0;i<npL+npM+npN;i++) {
+        for (i=0;i<npL+npC+npN;i++) {
             fscanf(fp5, "%d %lf %lf %lf %lf", &tmp1, &tmp2, &tmp3, &tmp4, &tmp5);
             printf("%d-atom, %f\n",i,tmp5);
             if (i < npL)
@@ -263,23 +263,23 @@ int main(int argc, char **argv) {
                     magmom[setn][Lid[i]] = -1;
                 else
                     magmom[setn][Lid[i]] = 0;
-            else if (i < npL+npM)
-                if (tmp5 > magMn)
-                    magmom[setn][Mid[i-npL]] = 1;
-                else if (tmp5 < -1*magMn)
-                    magmom[setn][Mid[i-npL]] = -1;
+            else if (i < npL+npC)
+                if (tmp5 > magCo)
+                    magmom[setn][Cid[i-npL]] = 1;
+                else if (tmp5 < -1*magCo)
+                    magmom[setn][Cid[i-npL]] = -1;
                 else
-                    magmom[setn][Mid[i-npL]] = 0;
+                    magmom[setn][Cid[i-npL]] = 0;
             else
                 if (tmp5 > magNi)
-                    magmom[setn][Nid[i-npL-npM]] = 1;
+                    magmom[setn][Nid[i-npL-npC]] = 1;
                 else if (tmp5 < -1*magNi)
-                    magmom[setn][Nid[i-npL-npM]] = -1;
+                    magmom[setn][Nid[i-npL-npC]] = -1;
                 else
-                    magmom[setn][Nid[i-npL-npM]] = 0;
+                    magmom[setn][Nid[i-npL-npC]] = 0;
         }
         nL[setn] = npL;
-        nM[setn] = npM;
+        nC[setn] = npC;
         nN[setn] = npN;
 
         sprintf(datfilename,"data%d/energy.dat",setn+1);
@@ -296,19 +296,19 @@ int main(int argc, char **argv) {
         fclose(fp5);
         fclose(fp6);
     }
-    
+
     // identify the energy at end states
-    double EM, EN;
+    double EC, EN;
     int fullc;
     fullc = (int) np/2;
     for (i=0;i<ndata;i++) {
-        if (nM[i] == fullc && nL[i] == fullc && E[i] < EM)
-            EM = E[i];
+        if (nC[i] == fullc && nL[i] == fullc && E[i] < EC)
+            EC = E[i];
         if (nN[i] == fullc && nL[i] == fullc && E[i] < EN)
             EN = E[i];
     }
     for (i=0;i<ndata;i++)
-        Ef[i] = E[i] - nM[i]*EM/(np*1.0/2) - nN[i]*EN/(np*1.0/2);
+        Ef[i] = E[i] - nC[i]*EC/(np*1.0/2) - nN[i]*EN/(np*1.0/2);
 
     printf("----------------------------------------\n");
     printf("Data Table\n");
@@ -328,7 +328,7 @@ int main(int argc, char **argv) {
     printf("Ef\n");
     for (i=0;i<ndata;i++)
         printf("%.4e\n",Ef[i]);
-    
+
     FILE *fp7, *fp8, *fp9, *fp10;
     fp7 = fopen("data_orig.dat","w");
     fp8 = fopen("magmom_orig.dat","w");
@@ -345,21 +345,3 @@ int main(int argc, char **argv) {
         fprintf(fp10,"%.6f\n",Ef[i]);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
