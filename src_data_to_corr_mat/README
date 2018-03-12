@@ -35,7 +35,7 @@ In addition to param.dat, the following files also should be provided.
 7) map_to_cluster3.dat: mapping info, from a set of three lattice sites to three-body cluster type
 8) nlist.dat: neighbor list
 
-The files 1)-4) should be provided by analyzing the data sets in the training set, while the files 5)-8) are provided from the result of running clusterlist (another program of the package).
+The files 1)-4) should be provided by analyzing the data sets in the training set (if you used VASP, you can use the utility programs in the directory of utils4vasp of the package), while the files 5)-8) are provided from the result of running clusterlist (sub-program 1 of the package).
 
 You can run the executable as follows.
 
