@@ -11,7 +11,7 @@ To compile this program, GNU Scientific Library (GSL) should be pre-installed. T
 
 >> make
 
-It will build an executable, run_findcluster.
+It will build an executable, run_findcluster. Note that the Makefile is writen based on mpicc. If your system runs different C-compilers, you need to update 'CC' and 'CFLAGS' in Makefile correspondingly. Your system should also have gsl library installed (refer to https://www.gnu.org/software/gsl/ for further information).
 
 To run the executable, the parameters in the following list should be provided (these parameters should be written in param.dat).
 
