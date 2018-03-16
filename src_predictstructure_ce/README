@@ -10,7 +10,7 @@ To compile this program, type the following at the prompt.
 
 >> make
 
-It will build an executable, run_findcluster_ce.
+It will build an executable, run_findcluster_ce. Note that the Makefile is writen based on mpicc. If your system runs different C-compilers, you need to update 'CC' and 'CFLAGS' in Makefile correspondingly.
 
 To run the executable, the parameters in the following list should be provided (these parameters should be written in param.dat).
 
