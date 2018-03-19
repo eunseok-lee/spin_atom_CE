@@ -266,7 +266,7 @@ int main(int argc, char **argv) {
             magmom_trial[rand_dist[i]] = 1;
         }
     }
-    else (rank == MASTER && newstart == 0) {
+    else if (rank == MASTER && newstart == 0) {
         sprintf(loadfilename,"%s/%s",dirname,data_ini_filename);
         load_int_array(data_trial, np, loadfilename);
         sprintf(loadfilename,"%s/%s",dirname,magmom_ini_filename);
