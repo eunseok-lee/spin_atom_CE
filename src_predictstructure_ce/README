@@ -38,9 +38,9 @@ In addition to param.dat, the following files also should be provided.
 7) *.dat, for atomic species: initial configuration of atomic species at each lattice site
 8) *.dat, for spin types: initial configuration of spin types at each lattice site
 
-The files 1) and 2) can be provided from the results of running findcluster (another program of the package), and the files 3)-6) can be provided from running clusterlist (another program of the package). The files 7) and 8) must be provided if newstart is set to 0 and their names should be specified in param.dat
+The files 1) and 2) can be provided from the results of running findcluster (another program of the package), and the files 3)-6) can be provided from running clusterlist (another program of the package). The files 7) and 8) must be provided if newstart is set to 0 and their names should be specified in param.dat. All input files must be located in dir_inputs directory. 
 
-You can run the executable as follows.
+You can run the executable as follows. The executable will read input files from dir_inputs directory, hence the executable and dir_inputs should be located in a same directory.
 
 >>./run_findcluster_ce
 
