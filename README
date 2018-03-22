@@ -4,7 +4,7 @@
 # v1: Feb 2, 2018 (draft version: Dec 1, 2016)
 ##########################################################
 
-This computational package is to perform spin-atom cluster expansion (CE) for ternary alloys. The cluster functions are formulated from the coupled configuration of atomic species and magnetic moment at each lattice site. For further information, refer to Physical Review B 95, 085134 (2017). In addition, k-NN machine learning algorithm for anomaly detection is implemented into the regulation process of data.
+This computational package is to perform spin-atom cluster expansion (CE) for ternary alloys. The cluster functions are formulated from the coupled configuration of atomic species and magnetic moment at each lattice site. For further information, refer to Physical Review B 95, 085134 (2017). In addition, k-NN machine learning algorithm for anomaly detection is implemented into data regularization process.
 
 The package consists of four sub-programs, listed in the following list. Each program can run independently if all required parameters are provided correctly.
 
