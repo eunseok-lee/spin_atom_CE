@@ -32,7 +32,7 @@ void least_square_solver(double *matA, int n_row, int n_col, double *y, double *
         for (j=0; j<n_col; j++) {
             gsl_matrix_set (A, i, j, *(matA+i*n_col+j));
         }
-        gsl_vector_set (b, j, y[i]);
+        gsl_vector_set (b, i, y[i]);
     }
     gsl_linalg_SV_decomp(A, V, S, work);    // on output, A is replaced by U!
     gsl_linalg_SV_solve (A, V, S, b, x);    // So, A should be used instead of U, here.
